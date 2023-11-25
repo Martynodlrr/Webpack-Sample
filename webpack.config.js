@@ -16,11 +16,13 @@ module.exports = {
   mode: 'development',
 
   devServer: {
+    historyApiFallback: true,
     static: {
-      directory: path.join(__dirname, './dist'),
+      directory: path.resolve(__dirname, './dist'),
     },
-    allowedHosts: 'auto',
+    open: true,
     compress: true,
+    hot: true,
     port: 8080,
   },
 
