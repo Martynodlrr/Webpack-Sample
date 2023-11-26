@@ -1,7 +1,8 @@
 $font-size: 1rem;
-$font-color: lch(53 105 40);
+$font-color: lch(250 250 250);
 
 html {
   font-size: $font-size;
   color: $font-color;
+  background-color: rgb(51, 51, 51);
 }

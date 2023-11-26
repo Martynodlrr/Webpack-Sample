@@ -4,26 +4,21 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
+  mode: 'development',
+  devtool: 'eval-cheap-source-map',
   entry: {
     main: path.resolve(__dirname, './src/index.js'),
   },
 
   output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: '[name].bundle.js',
+    path: path.join(__dirname, './build'),
+    filename: 'js/[name].js'
   },
-
-  mode: 'development',
-
-  devServer: {
-    historyApiFallback: true,
-    static: {
-      directory: path.resolve(__dirname, './dist'),
-    },
-    open: true,
-    compress: true,
-    hot: true,
-    port: 8080,
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      name: false
+    }
   },
 
   plugins: [
@@ -36,13 +31,27 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
   ],
 
+  mode: 'development',
+  devServer: {
+    hot: true,
+  },
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, './src')
+    }
+  },
   module: {
     rules: [
       //JavaScript
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: ['babel-loader'],
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto'
+      },
+      {
+        test: /\.(js)$/,
+        include: path.resolve(__dirname, './src'),
+        loader: 'babel-loader'
       },
       //Images
       {
@@ -57,16 +66,18 @@ module.exports = {
       },
       // CSS, PostCSS, and Sass
       {
-        test: /\.(scss|css)$/,
-        use: ['style-loader',
+        test: /\.s?css$/i,
+        use: [
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
               sourceMap: true,
             },
           },
-          'postcss-loader', 'sass-loader'],
-      },
+          'sass-loader',
+        ],
+      }
     ]
   }
 };
